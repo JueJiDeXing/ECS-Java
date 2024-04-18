@@ -1,23 +1,19 @@
 package com.jjdx.ecosystem;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.jjdx.ecosystem.Component.Component;
-import com.jjdx.ecosystem.Component.Components.Name;
-import com.jjdx.ecosystem.Component.Components.Pos;
-import com.jjdx.ecosystem.Component.Components.Speed;
 import com.jjdx.ecosystem.Entity.EntityID;
 import com.jjdx.ecosystem.Event.EventReader;
 import com.jjdx.ecosystem.Event.EventWriter;
 import com.jjdx.ecosystem.Event.Eventer;
 import com.jjdx.ecosystem.Resource.Resources.Inputer;
 import com.jjdx.ecosystem.Resource.Resources.Keyer;
-import com.jjdx.ecosystem.System.StartUpSystem;
-import com.jjdx.ecosystem.System.Systems.StartUpSysList;
-import com.jjdx.ecosystem.System.Systems.UpdateSysList;
-import com.jjdx.ecosystem.System.UpdateSystem;
+import com.jjdx.ecosystem.System.StartSystems.StartSystemManger;
+import com.jjdx.ecosystem.System.UpdateSystems.UpdateSystemManger;
 import com.jjdx.ecosystem.World.Queryer;
 import com.jjdx.ecosystem.World.World;
 
-import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
@@ -27,32 +23,35 @@ import java.util.List;
  @ Author: 绝迹的星  <br>
  @ Time: 2024/4/16  <br> */
 public class Test {
-
     public static void main(String[] args) {
         World world = new World();
         EventReader<String> reader = Eventer.reader("");
         EventWriter<String> writer = Eventer.writer("");
-        world.addStartUpSystem(StartUpSysList.getSysList())// 启动系统
-                .addUpdateSystem(UpdateSysList.getSysList())// 更新系统
-                .setResource(new Inputer(writer)) //插入一个控制台输入监听器
-                .setResource(new Keyer(System.out::println, System.out::println, System.out::println));
+        world.addStartUpSystem(StartSystemManger.getSysList())// 启动系统
+                .addUpdateSystem(UpdateSystemManger.getSysList())// 更新系统
+                .setResource(new Inputer(writer)) // 插入一个控制台输入监听器
+                .setResource(
+                        new Keyer(
+                                keyText -> {
+                                    if (keyText.equals("0")) {
+                                        System.out.println("--1--");
+                                    }
+                                }, null, null));
+
         world.startUp();//调用启动系统
         Queryer queryer = Queryer.getInstance();//查询器,可查询实体
         while (true) {
-            if (reader.isHave()) {//读取控制台输入
-                String read = reader.read();
-                if (read.equals("exit")) {//输入exit退出程序
-                    world.shutdown();
-                    break;
-                }
-            }
-            //query(queryer);
-            world.update();//调用更新系统
-            //try {
-            //    Thread.sleep(1000);
-            //} catch (InterruptedException e) {
-            //    e.printStackTrace();
-            //}
+
+
+        }
+        //world.shutdown();
+    }
+
+    private static void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

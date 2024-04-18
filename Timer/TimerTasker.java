@@ -12,43 +12,48 @@ import java.util.*;
  @ Time: 2024/4/18 <br> */
 public class TimerTasker {
 
-    TimerID id = new TimerID();
+    TimerID id = new TimerID(0);
     @Getter
     private static final TimerTasker instance = new TimerTasker();
 
-    HashMap<TimerID, Timer> idToTimer = new HashMap<>();
-    HashMap<Timer, TimerID> timerToId = new HashMap<>();
+    HashMap<TimerID, Thread> idToThread = new HashMap<>();
 
     /**
      添加任务
 
-     @param task 任务
+     @param task 要执行任务
      */
-    public TimerID schedule(TimerTask task, long delay, long period) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(task, delay, period);
-        return addTimer(timer);
+    public TimerID schedule(Runnable task) {
+        Thread thread = new Thread(task);
+        thread.setName("TimerTasker-" + id.curId);
+        thread.start();
+        return addThread(thread);
     }
 
     /**
      存储任务
      */
-    private TimerID addTimer(Timer timer) {
-        idToTimer.put(id, timer);
-        timerToId.put(timer, id);
-        return id.getAndIncrement();
+    private TimerID addThread(Thread thread) {
+        TimerID ass = id.getAndIncrement();
+        idToThread.put(ass, thread);
+        return ass;
     }
 
-
+    /**
+     移除任务(终止线程)
+     */
     public void removeTimer(TimerID id) {
-        Timer timer = idToTimer.remove(id);
-        timerToId.remove(timer);
-        timer.cancel();
+        Thread thread = idToThread.remove(id);
+        thread.interrupt();
     }
 
+    /**
+     移除全部任务
+     */
     public void removeAllTimer() {
-        for (Timer timer : timerToId.keySet()) timer.cancel();
-        idToTimer.clear();
-        timerToId.clear();
+        for (Thread thread : idToThread.values()) {
+            thread.interrupt();
+        }
+        idToThread.clear();
     }
 }

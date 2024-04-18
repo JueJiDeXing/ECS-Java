@@ -6,6 +6,6 @@ package com.jjdx.ecosystem.System;
 
  @ Author: 绝迹的星 <br>
  @ Time: 2024/4/17 <br> */
-public interface UpdateSystem extends System {
+public abstract class UpdateSystem implements System {
 }
 

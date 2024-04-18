@@ -2,6 +2,7 @@ package com.jjdx.ecosystem.Timer;
 
 import com.jjdx.ecosystem.Util.ID;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
@@ -9,17 +10,18 @@ import java.util.*;
 /**
  时间任务ID
  <br>
+
  @ Author: 绝迹的星 <br>
- @ Time: 2024/4/18 <br>
- */
+ @ Time: 2024/4/18 <br> */
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimerID extends ID {
+   int curId = 0;
 
-    int id = 0;
 
     public TimerID getAndIncrement() {
-        return new TimerID(id++);
+        return new TimerID(curId++);
     }
 
     @Override
@@ -27,16 +29,16 @@ public class TimerID extends ID {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimerID that = (TimerID) o;
-        return id == that.id;
+        return curId == that.curId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(curId);
     }
 
     @Override
     public String toString() {
-        return "TimerID(" + id + ")";
+        return "TimerID(" + curId + ")";
     }
 }

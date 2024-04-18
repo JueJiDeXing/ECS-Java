@@ -105,16 +105,17 @@ public class World {
         eventer.addAllEvents();
     }
 
-
     public void shutdown() {
         componentMap.clear();
         componentClassToInfo.clear();//class -> info -> pool
         entities.clear();
         resourceClassToID.clear();
+        for (Resource resource : idToResource.values()) {
+            resource.destroy();
+        }
         idToResource.clear();
         startUpSystems.clear();
         updateSystems.clear();
-        Eventer.getInstance().setShutdown(true);
         TimerTasker.getInstance().removeAllTimer();
     }
 

@@ -5,6 +5,7 @@ import com.jjdx.ecosystem.Resource.Resource;
 import com.jjdx.ecosystem.Timer.TimerID;
 import com.jjdx.ecosystem.Timer.TimerTasker;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -23,21 +24,30 @@ public class Inputer extends Resource {
 
     TimerID timerID;
 
-    private void addTask(EventWriter<String> eventWriter) {
-        timerID = TimerTasker.getInstance().schedule(new TimerTask() {
-            final Scanner sc = new Scanner(System.in);
 
-            @Override
-            public void run() {
-                if (sc.hasNext()) {
-                    eventWriter.write(sc.next());
+    private void addTask(EventWriter<String> eventWriter) {
+        timerID = TimerTasker.getInstance().schedule(() -> {
+            Scanner sc = new Scanner(System.in);
+            while (true) {
+                try {
+                    if (System.in.available() > 0) {
+                        eventWriter.write(sc.next());
+                    } else if (timerID == null) {
+                        System.out.println("break");
+                        break;
+                    }
+                } catch (IOException e) {
+                    break;
                 }
             }
-        }, 0, 100);
+        });
     }
 
     @Override
     public void destroy() {
-        if (timerID != null) TimerTasker.getInstance().removeTimer(timerID);
+        if (timerID != null) {
+            TimerTasker.getInstance().removeTimer(timerID);
+            timerID = null;
+        }
     }
 }

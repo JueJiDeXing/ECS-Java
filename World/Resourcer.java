@@ -59,8 +59,8 @@ public class Resourcer {
         if (!world.resourceClassToID.containsKey(resourceClass)) return this;
         ResourceID resourceID = world.resourceClassToID.get(resourceClass);
         world.resourceClassToID.remove(resourceClass);
-        Resource remove = world.idToResource.remove(resourceID);
-        remove.destroy();
+        Resource resource = world.idToResource.remove(resourceID);
+        resource.destroy();
         return this;
     }
 }
