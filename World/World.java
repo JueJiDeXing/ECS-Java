@@ -69,9 +69,8 @@ public class World {
     }
 
     public void update() {
-        Eventer eventer = Eventer.getInstance();
         systemer.update();
-        eventer.addAllEvents();
+        eventer.applyEvents();
     }
 
     public void otherSysUpdate() {
