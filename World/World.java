@@ -2,17 +2,16 @@ package com.jjdx.ecosystem.World;
 
 import com.jjdx.ecosystem.Component.Component;
 import com.jjdx.ecosystem.Component.ComponentID;
-import com.jjdx.ecosystem.Component.ComponentInfo;
 import com.jjdx.ecosystem.Entity.EntityID;
 import com.jjdx.ecosystem.Event.Eventer;
 import com.jjdx.ecosystem.Resource.Resource;
 import com.jjdx.ecosystem.Resource.ResourceID;
-import com.jjdx.ecosystem.Timer.TimerTasker;
+import com.jjdx.ecosystem.System.OtherSystem;
 import com.jjdx.ecosystem.System.StartUpSystem;
 import com.jjdx.ecosystem.System.UpdateSystem;
+import com.jjdx.ecosystem.Timer.TimerTasker;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,106 +22,74 @@ import java.util.Map;
  @ Author: 绝迹的星<br>
  @ Time: 2024/4/17<br> */
 public class World {
-    /**
-     组件id -> 组件对象
-     */
-    HashMap<ComponentID, Component> componentMap = new HashMap<>();
-    /**
-     组件类 -> 组件类信息 -> 该类组件池(所有该类组件对象) && 该类组件关联的实体对象集合
-     */
-    HashMap<Class<Component>, ComponentInfo> componentClassToInfo = new HashMap<>();
-    /**
-     entity对象 -> 该对象关联的Component列表
-     */
-    HashMap<EntityID, HashMap<ComponentID, Component>> entities = new HashMap<>();
-    /**
-     resource类 -> resource对象id
-     */
-    HashMap<Class<Resource>, ResourceID> resourceClassToID = new HashMap<>();
-    /**
-     resource对象id -> resource对象
-     */
-    HashMap<ResourceID, Resource> idToResource = new HashMap<>();
-    /**
-     系统
-     */
-    LinkedList<StartUpSystem> startUpSystems = new LinkedList<>();
-    LinkedList<UpdateSystem> updateSystems = new LinkedList<>();
-
-    public World() {
-        Commands.setWorld(this);
-        Queryer.setWorld(this);
-        Resourcer.setWorld(this);
-    }
+    Comonponter comonponter = Comonponter.getInstance();
+    Queryer queryer = Queryer.getInstance();
+    Eventer eventer = Eventer.getInstance();
+    Resourcer resourcer = Resourcer.getInstance();
+    Systemer systemer = Systemer.getInstance();
 
     public World setResource(Resource resource) {
-        Resourcer.getInstance().setResource(resource);
+        resourcer.setResource(resource);
         return this;
     }
 
     public World removeResource(Class<? extends Resource> resourceClass) {
-        Resourcer.getInstance().removeResource(resourceClass);
+        resourcer.removeResource(resourceClass);
         return this;
     }
 
     public World addStartUpSystem(StartUpSystem sys) {
-        startUpSystems.add(sys);
+        systemer.addStartUpSystem(sys);
         return this;
     }
 
     public World addUpdateSystem(UpdateSystem sys) {
-        updateSystems.add(sys);
+        systemer.addUpdateSystem(sys);
+        return this;
+    }
+
+    public World addOtherSystem(OtherSystem sys) {
+        systemer.addOtherSystem(sys);
         return this;
     }
 
     public World addUpdateSystem(List<UpdateSystem> sys) {
-        updateSystems.addAll(sys);
+        systemer.addUpdateSystem(sys);
         return this;
     }
 
     public World addStartUpSystem(List<StartUpSystem> sys) {
-        startUpSystems.addAll(sys);
+        systemer.addStartUpSystem(sys);
         return this;
     }
 
     public void startUp() {
-        for (StartUpSystem sys : startUpSystems) {
-            sys.run(Commands.getInstance(),
-                    Queryer.getInstance(),
-                    Resourcer.getInstance(),
-                    Eventer.getInstance());
-        }
+        systemer.startUp();
+
     }
 
     public void update() {
         Eventer eventer = Eventer.getInstance();
-        for (UpdateSystem sys : updateSystems) {
-            sys.run(Commands.getInstance(),
-                    Queryer.getInstance(),
-                    Resourcer.getInstance(),
-                    eventer);
-        }
+        systemer.update();
         eventer.addAllEvents();
     }
 
+    public void otherSysUpdate() {
+        systemer.doOther();
+
+    }
+
     public void shutdown() {
-        componentMap.clear();
-        componentClassToInfo.clear();//class -> info -> pool
-        entities.clear();
-        resourceClassToID.clear();
-        for (Resource resource : idToResource.values()) {
-            resource.destroy();
-        }
-        idToResource.clear();
-        startUpSystems.clear();
-        updateSystems.clear();
+        comonponter.clear();
+        resourcer.clear();
+        Systemer.getInstance().clear();
         TimerTasker.getInstance().removeAllTimer();
     }
 
     public String toStringEntity() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Entity(").append(entities.size()).append("): ").append("[");
-        for (Map.Entry<EntityID, HashMap<ComponentID, Component>> entry : entities.entrySet()) {
+        sb.append("Entity(").append(comonponter.entities.size()).append("): ").append("[");
+        for (Map.Entry<EntityID, HashMap<ComponentID, Component>> entry : comonponter.entities.entrySet()) {
             HashMap<ComponentID, Component> components = entry.getValue();
             sb.append("{");
             for (Map.Entry<ComponentID, Component> componentEntry : components.entrySet()) {
@@ -136,8 +103,8 @@ public class World {
 
     public String toStringComponent() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Component(").append(componentMap.size()).append("): ").append("[");
-        for (Map.Entry<ComponentID, Component> entry : componentMap.entrySet()) {
+        sb.append("Component(").append(comonponter.componentMap.size()).append("): ").append("[");
+        for (Map.Entry<ComponentID, Component> entry : comonponter.componentMap.entrySet()) {
             Component component = entry.getValue();
             sb.append(component).append(", ");
         }
@@ -147,8 +114,8 @@ public class World {
 
     public String toStringResource() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Resource(").append(idToResource.size()).append("): ").append("[");
-        for (Map.Entry<ResourceID, Resource> entry : idToResource.entrySet()) {
+        sb.append("Resource(").append(resourcer.idToResource.size()).append("): ").append("[");
+        for (Map.Entry<ResourceID, Resource> entry : resourcer.idToResource.entrySet()) {
             Resource component = entry.getValue();
             sb.append(component).append(", ");
         }
@@ -157,17 +124,17 @@ public class World {
     }
 
     public String toStringSystem() {
-        return "System(" + (startUpSystems.size() + updateSystems.size()) + "): " +
-                startUpSystems + ", " + updateSystems;
+        return "System(" + (systemer.startUpSystems.size() + systemer.updateSystems.size()) + "): " +
+                systemer.startUpSystems + ", " + systemer.updateSystems;
     }
 
     @Override
     public String toString() {
         return "World{" +
-                "Entity(" + entities.size() +
-                "), Component(" + componentMap.size() +
-                "), Resource(" + idToResource.size() +
-                "), System(" + startUpSystems.size() + updateSystems.size() +
+                "Entity(" + comonponter.entities.size() +
+                "), Component(" + comonponter.componentMap.size() +
+                "), Resource(" + resourcer.idToResource.size() +
+                "), System(" + systemer.startUpSystems.size() + systemer.updateSystems.size() +
                 ")}";
     }
 }

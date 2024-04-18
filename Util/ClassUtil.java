@@ -25,7 +25,6 @@ public class ClassUtil {
         List<V> sysList = new ArrayList<>();
         try {
             String packageName = page.getPackage().getName();
-            System.out.println("packageName: " + packageName);
             List<Class<?>> classes = ClassUtil.getClasses(packageName);
             for (Class<?> clazz : classes) {
                 if (Modifier.isAbstract(clazz.getModifiers())) {

@@ -1,13 +1,9 @@
 package com.jjdx.ecosystem.System.StartSystems;
 
-import com.jjdx.ecosystem.Component.Components.Name;
-import com.jjdx.ecosystem.Component.Components.Pos;
-import com.jjdx.ecosystem.Component.Components.Speed;
 import com.jjdx.ecosystem.System.StartUpSystem;
 import com.jjdx.ecosystem.Util.ClassUtil;
 
-import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.List;
 
 /**
  启动系统管理器

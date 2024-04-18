@@ -8,28 +8,27 @@ import lombok.Getter;
 import java.util.*;
 
 /**
- 查询器,用于查询实体和组件
+ 组件查询器,依赖于组件管理器,用于查询实体和组件
  <br>
 
  @ Author: 绝迹的星<br>
  @ Time: 2024/4/17<br> */
 public class Queryer {
-    World world;
+
     @Getter
     private static final Queryer instance = new Queryer();
+
+    Comonponter comonponter = Comonponter.getInstance();
 
     private Queryer() {
     }
 
-    public static void setWorld(World world) {
-        instance.world = world;
-    }
 
     /**
      获取所有实体
      */
     public List<EntityID> getAllEntity() {
-        return world.entities.keySet().stream().toList();
+        return comonponter.entities.keySet().stream().toList();
     }
 
 
@@ -39,7 +38,7 @@ public class Queryer {
      @param componentClass 组件类型
      */
     public Component getComponent(EntityID entityID, Class<? extends Component> componentClass) {
-        HashMap<ComponentID, Component> idToComponent = world.entities.get(entityID);
+        HashMap<ComponentID, Component> idToComponent = comonponter.entities.get(entityID);
         for (Component component : idToComponent.values()) {
             if (componentClass.equals(component.getClass())) return component;
         }
@@ -55,7 +54,7 @@ public class Queryer {
     public final List<Component> getComponent(EntityID entityID, Class<? extends Component>... componentClass) {
         List<Component> ans = new ArrayList<>();
         HashSet<Class<? extends Component>> set = new HashSet<>(Arrays.asList(componentClass));
-        HashMap<ComponentID, Component> idToComponent = world.entities.get(entityID);
+        HashMap<ComponentID, Component> idToComponent = comonponter.entities.get(entityID);
         for (Component component : idToComponent.values()) {
             if (set.contains(component.getClass())) ans.add(component);
         }
@@ -72,7 +71,7 @@ public class Queryer {
         List<EntityID> entities = new ArrayList<>();
         List<Class<? extends Component>> list = Arrays.asList(componentClass);
         Set<Class<? extends Component>> set = new HashSet<>();
-        for (Map.Entry<EntityID, HashMap<ComponentID, Component>> entry : world.entities.entrySet()) {//遍历所有实体
+        for (Map.Entry<EntityID, HashMap<ComponentID, Component>> entry : comonponter.entities.entrySet()) {//遍历所有实体
             //该组件拥有的 所有组件类
             set.clear();
             Collection<Component> values = entry.getValue().values();
@@ -87,20 +86,20 @@ public class Queryer {
      判断实体是否存在
      */
     public boolean isContain(EntityID entityID) {
-        return world.entities.containsKey(entityID);
+        return comonponter.entities.containsKey(entityID);
     }
 
     /**
      获取实体关联的组件
      */
     public HashMap<ComponentID, Component> getComponentOfEntity(EntityID entityID) {
-        return world.entities.get(entityID);
+        return comonponter.entities.get(entityID);
     }
 
     /**
      获取实体关联的全部组件
      */
     public List<Component> getEntityComponent(EntityID entityID) {
-        return new ArrayList<>(world.entities.get(entityID).values());
+        return new ArrayList<>(comonponter.entities.get(entityID).values());
     }
 }

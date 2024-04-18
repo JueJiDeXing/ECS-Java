@@ -5,11 +5,11 @@ import com.jjdx.ecosystem.Component.Components.Speed;
 import com.jjdx.ecosystem.Entity.EntityID;
 import com.jjdx.ecosystem.Event.Eventer;
 import com.jjdx.ecosystem.System.UpdateSystem;
-import com.jjdx.ecosystem.World.Commands;
+import com.jjdx.ecosystem.World.Comonponter;
 import com.jjdx.ecosystem.World.Queryer;
 import com.jjdx.ecosystem.World.Resourcer;
 
-import java.util.*;
+import java.util.List;
 
 /**
  测试: 移动系统
@@ -20,7 +20,7 @@ import java.util.*;
 public class MoveSys extends UpdateSystem {
 
     @Override
-    public void run(Commands commands, Queryer queryer, Resourcer resourcer, Eventer eventer) {
+    public void run(Comonponter comonponter, Queryer queryer, Resourcer resourcer, Eventer eventer) {
         // 根据速度更新位置
         List<EntityID> canMoveEntity = queryer.getEntityWithComponents(Pos.class, Speed.class);
         for (EntityID entityID : canMoveEntity) {
