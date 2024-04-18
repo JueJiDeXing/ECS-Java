@@ -11,7 +11,7 @@ import java.util.*;
  @ Author: 绝迹的星 <br>
  @ Time: 2024/4/17 <br> */
 public class EventReader<T> {
-    EventStaging<T> eventStaging  ;
+    EventStaging<T> eventStaging;
 
     public EventReader(EventStaging<T> eventStaging) {
         this.eventStaging = eventStaging;

@@ -1,13 +1,7 @@
 package com.jjdx.ecosystem.Component;
 
-import com.jjdx.ecosystem.Component.Component;
-import com.jjdx.ecosystem.Component.ComponentID;
-import com.jjdx.ecosystem.Entity.EntityGenerator;
-import com.jjdx.ecosystem.Util.ID;
 import com.jjdx.ecosystem.Util.IDGenerator;
 import lombok.Getter;
-
-import java.util.*;
 
 /**
  组件ID生成器

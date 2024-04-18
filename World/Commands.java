@@ -5,10 +5,7 @@ import com.jjdx.ecosystem.Component.ComponentID;
 import com.jjdx.ecosystem.Component.ComponentIDGenerator;
 import com.jjdx.ecosystem.Component.ComponentInfo;
 import com.jjdx.ecosystem.Entity.EntityID;
-import com.jjdx.ecosystem.Entity.EntityGenerator;
-import com.jjdx.ecosystem.Resource.Resource;
-import com.jjdx.ecosystem.Resource.ResourceID;
-import com.jjdx.ecosystem.Resource.ResourceIDGenerator;
+import com.jjdx.ecosystem.Entity.EntityIDGenerator;
 import lombok.Getter;
 
 import java.util.*;
@@ -60,7 +57,7 @@ public class Commands {
      根据传入的组件对象列表创建实体,并返回这个实体对象
      */
     public EntityID createEntityAndReturn(Component... components) {
-        EntityID entityID = EntityGenerator.getInstance().Gen();//生成实体id
+        EntityID entityID = EntityIDGenerator.getInstance().Gen();//生成实体id
         // 添加组件
         for (Component component : components) {
             ComponentID componentID = ComponentIDGenerator.getInstance().Gen();//生成组件ID
