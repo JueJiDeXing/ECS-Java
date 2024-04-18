@@ -1,6 +1,5 @@
 package com.jjdx.ecosystem;
 
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.jjdx.ecosystem.Component.Component;
 import com.jjdx.ecosystem.Entity.EntityID;
 import com.jjdx.ecosystem.Event.EventReader;
@@ -13,7 +12,6 @@ import com.jjdx.ecosystem.System.UpdateSystems.UpdateSystemManger;
 import com.jjdx.ecosystem.World.Queryer;
 import com.jjdx.ecosystem.World.World;
 
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
@@ -40,11 +38,9 @@ public class Test {
 
         world.startUp();//调用启动系统
         Queryer queryer = Queryer.getInstance();//查询器,可查询实体
-        while (true) {
-
-
-        }
-        //world.shutdown();
+        System.out.println(world.toStringSystem());
+        System.out.println(world.toStringEntity());
+        world.shutdown();
     }
 
     private static void sleep(long time) {

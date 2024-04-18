@@ -22,6 +22,6 @@ import java.util.List;
 public class UpdateSystemManger {
 
     public static List<UpdateSystem> getSysList() {
-        return ClassUtil.scan(UpdateSystem.class);
+        return ClassUtil.scan(UpdateSystemManger.class, UpdateSystem.class);
     }
 }

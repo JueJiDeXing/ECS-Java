@@ -6,7 +6,6 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.jjdx.ecosystem.Resource.Resource;
 
-import java.awt.event.*;
 import java.util.function.Consumer;
 
 /**
@@ -20,6 +19,7 @@ public class Keyer extends Resource implements NativeKeyListener {
 
     @Override
     public void destroy() {
+        removeListener();//移除监听,使线程中断
     }
 
     Consumer<String> keyPressed;
@@ -41,6 +41,7 @@ public class Keyer extends Resource implements NativeKeyListener {
         try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
+
             System.err.println("键盘监听初始化发生错误: ");
             System.err.println(ex.getMessage());
             System.exit(1);
@@ -54,6 +55,14 @@ public class Keyer extends Resource implements NativeKeyListener {
 
     public void setListener() {
         GlobalScreen.addNativeKeyListener(this);
+    }
+
+    public void removeListener() {
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
@@ -71,6 +80,4 @@ public class Keyer extends Resource implements NativeKeyListener {
     public void nativeKeyTyped(NativeKeyEvent e) {
         if (keyTyped != null) keyTyped.accept(getKeyText(e));
     }
-
-
 }

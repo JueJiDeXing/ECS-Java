@@ -18,6 +18,6 @@ import java.util.*;
 public class StartSystemManger {
 
     public static List<StartUpSystem> getSysList() {
-        return ClassUtil.scan(StartUpSystem.class);
+        return ClassUtil.scan(StartSystemManger.class, StartUpSystem.class);
     }
 }

@@ -41,7 +41,7 @@ public class SparseSet {
         if (r >= indexes.size()) return;
         Integer idx = indexes.get(r)[c];
         if (idx == null) return;
-        Swaper.swap(list, idx, list.size() - 1);//交换到末尾后删除
+        Swapper.swap(list, idx, list.size() - 1);//交换到末尾后删除
         list.pollLast();
         indexes.get(r)[c] = null;
     }

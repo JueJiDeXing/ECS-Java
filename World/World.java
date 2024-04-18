@@ -156,12 +156,18 @@ public class World {
         return sb.toString();
     }
 
+    public String toStringSystem() {
+        return "System(" + (startUpSystems.size() + updateSystems.size()) + "): " +
+                startUpSystems + ", " + updateSystems;
+    }
+
     @Override
     public String toString() {
         return "World{" +
                 "Entity(" + entities.size() +
                 "), Component(" + componentMap.size() +
                 "), Resource(" + idToResource.size() +
+                "), System(" + startUpSystems.size() + updateSystems.size() +
                 ")}";
     }
 }

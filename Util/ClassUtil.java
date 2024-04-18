@@ -14,24 +14,25 @@ import java.util.List;
 /**
  类管理
  <br>
+
  @ Author: 绝迹的星 <br>
- @ Time: 2024/4/18 <br>
- */
+ @ Time: 2024/4/18 <br> */
 public class ClassUtil {
     /**
      扫描继承了T的类
      */
-    public static <T> List<T> scan(Class<T> c) {
-        List<T> sysList = new ArrayList<>();
+    public static <T, V> List<V> scan(Class<T> page, Class<V> c) {
+        List<V> sysList = new ArrayList<>();
         try {
-            String packageName = StartSystemManger.class.getPackage().getName();
+            String packageName = page.getPackage().getName();
+            System.out.println("packageName: " + packageName);
             List<Class<?>> classes = ClassUtil.getClasses(packageName);
             for (Class<?> clazz : classes) {
                 if (Modifier.isAbstract(clazz.getModifiers())) {
                     continue;
                 }
                 if (c.isAssignableFrom(clazz)) {
-                    T sys = (T) clazz.newInstance();
+                    V sys = (V) clazz.newInstance();
                     sysList.add(sys);
                 }
             }

@@ -33,7 +33,6 @@ public class Inputer extends Resource {
                     if (System.in.available() > 0) {
                         eventWriter.write(sc.next());
                     } else if (timerID == null) {
-                        System.out.println("break");
                         break;
                     }
                 } catch (IOException e) {

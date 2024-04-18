@@ -1,8 +1,5 @@
 package com.jjdx.ecosystem.Util;
 
-import com.jjdx.ecosystem.Component.Component;
-import com.jjdx.ecosystem.Util.Swaper;
-
 import java.util.*;
 
 /**
@@ -21,7 +18,7 @@ public class Pool<T> {
     public void remove(T e) {
         int idx = list.indexOf(e);
         if (idx == -1) return;
-        Swaper.swap(list, idx, list.size() - 1);
+        Swapper.swap(list, idx, list.size() - 1);
         list.removeLast();
     }
 }
