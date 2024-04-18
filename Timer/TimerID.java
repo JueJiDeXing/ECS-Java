@@ -1,6 +1,5 @@
 package com.jjdx.ecosystem.Timer;
 
-import com.jjdx.ecosystem.Resource.ResourceID;
 import com.jjdx.ecosystem.Util.ID;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,9 @@ import java.util.*;
 
 /**
  时间任务ID
+ <br>
+ @ Author: 绝迹的星 <br>
+ @ Time: 2024/4/18 <br>
  */
 @NoArgsConstructor
 @AllArgsConstructor
