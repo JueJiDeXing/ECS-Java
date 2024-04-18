@@ -28,18 +28,21 @@ public class Test {
         world.addStartUpSystem(StartSystemManger.getSysList())// 启动系统
                 .addUpdateSystem(UpdateSystemManger.getSysList())// 更新系统
                 .setResource(new Inputer(writer)) // 插入一个控制台输入监听器
-                .setResource(
-                        new Keyer(
-                                keyText -> {
-                                    if (keyText.equals("0")) {
-                                        System.out.println("--1--");
-                                    }
-                                }, null, null));
-
+                .setResource(new Keyer(keyText -> {
+                    if (keyText.equals("0")) System.out.println("--1--");
+                }, null, null));//全局键盘事件监听器
         world.startUp();//调用启动系统
         Queryer queryer = Queryer.getInstance();//查询器,可查询实体
-        System.out.println(world.toStringSystem());
-        System.out.println(world.toStringEntity());
+        queryEntityAndPrint(queryer);
+        while (true) {
+            if (reader.isHave()) {
+                String text = reader.read();
+                break;
+            }
+            world.update();
+            sleep(1000);
+        }
+        queryEntityAndPrint(queryer);
         world.shutdown();
     }
 
@@ -51,7 +54,7 @@ public class Test {
         }
     }
 
-    private static void query(Queryer queryer) {
+    private static void queryEntityAndPrint(Queryer queryer) {
         System.out.println("--------query-------");
         List<EntityID> allEntity = queryer.getAllEntity();//查询全部实体
         for (EntityID entityID : allEntity) {
